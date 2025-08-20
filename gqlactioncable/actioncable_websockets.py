@@ -1,18 +1,18 @@
+from ssl import SSLContext
+
 import json
 import logging
-from ssl import SSLContext
-from typing import Any, Dict, Optional, Tuple, Union, cast
-
+from gql import GraphQLRequest
 from gql.transport.exceptions import TransportProtocolError
-from gql.transport.websockets_base import WebsocketsTransportBase
-from graphql import DocumentNode, ExecutionResult, print_ast
+from gql.transport.websockets import WebsocketsTransport
+from graphql import ExecutionResult
+from typing import Any, Dict, Optional, Tuple, Union
 from websockets.datastructures import HeadersLike
-from websockets.typing import Subprotocol
 
 log = logging.getLogger(__name__)
 
 
-class ActionCableWebsocketsTransport(WebsocketsTransportBase):
+class ActionCableWebsocketsTransport(WebsocketsTransport):
     """gql transport used to execute GraphQL queries on
     servers with a websocket connection implementing the ActionCable protocol.
 
@@ -20,9 +20,12 @@ class ActionCableWebsocketsTransport(WebsocketsTransportBase):
     requests on a websocket connection.
     """
 
+    ACTIONCABLE_SUBPROTOCOL = "actioncable-v1-json"
+
     def __init__(
         self,
         url: str,
+        *,
         headers: Optional[HeadersLike] = None,
         ssl: Union[SSLContext, bool] = False,
         connect_timeout: Optional[Union[int, float]] = 10,
@@ -47,25 +50,27 @@ class ActionCableWebsocketsTransport(WebsocketsTransportBase):
 
         super().__init__(
             url,
-            headers,
-            ssl,
-            init_payload,
-            connect_timeout,
-            close_timeout,
-            ack_timeout,
-            keep_alive_timeout,
-            connect_args,
+            headers=headers,
+            ssl=ssl,
+            init_payload=init_payload,
+            connect_timeout=connect_timeout,
+            close_timeout=close_timeout,
+            ack_timeout=ack_timeout,
+            keep_alive_timeout=keep_alive_timeout,
+            connect_args=connect_args,
         )
 
-        self.supported_subprotocols = [
-            cast(Subprotocol, "actioncable-v1-json"),
-        ]
+        self.adapter.subprotocols = [self.ACTIONCABLE_SUBPROTOCOL]
+
+    async def _initialize(self):
+        pass
+
+    async def _after_initialize(self):
+        pass
 
     async def _send_query(
         self,
-        document: DocumentNode,
-        variable_values: Optional[Dict[str, Any]] = None,
-        operation_name: Optional[str] = None,
+        request: GraphQLRequest,
     ) -> int:
         """Send a query to the provided websocket connection.
 
@@ -94,16 +99,8 @@ class ActionCableWebsocketsTransport(WebsocketsTransportBase):
 
         await self._send(subscribe_command)
 
-        payload: Dict[str, Any] = {
-            "query": print_ast(document),
-            "action": "execute",
-        }
-
-        if variable_values:
-            payload["variables"] = variable_values
-
-        if operation_name:
-            payload["operationName"] = operation_name
+        payload: Dict[str, Any] = request.payload
+        payload["action"] = "execute"
 
         message_command = json.dumps(
             {
@@ -197,6 +194,6 @@ class ActionCableWebsocketsTransport(WebsocketsTransportBase):
 
     async def _after_connect(self):
 
-        response_headers = self.websocket.response_headers
-        self.subprotocol = response_headers.get("Sec-WebSocket-Protocol")
+        response_headers = self.response_headers
+        self.subprotocol = response_headers.get("sec-websocket-protocol")
         log.debug(f"backend subprotocol returned: {self.subprotocol!r}")

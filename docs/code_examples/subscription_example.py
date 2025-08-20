@@ -1,11 +1,10 @@
 import asyncio
 import logging  # noqa: F401
-
 from gql import Client, gql
 
 from gqlactioncable import ActionCableWebsocketsTransport
 
-# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 
 
 async def main():

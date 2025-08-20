@@ -3,7 +3,7 @@
 SRC_PYTHON := gqlactioncable docs/code_examples
 
 check:
-	isort --recursive $(SRC_PYTHON)
+	isort $(SRC_PYTHON)
 	black $(SRC_PYTHON)
 	flake8 $(SRC_PYTHON)
 	mypy $(SRC_PYTHON)

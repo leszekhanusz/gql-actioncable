@@ -3,15 +3,15 @@ import os
 from setuptools import setup, find_packages
 
 install_requires = [
-    "gql[websockets]>=3.4.0,<4.0",
+    "gql[websockets]>=4.0.0",
 ]
 
 dev_requires = [
-    "black==22.3.0",
+    "black==25.1.0",
     "check-manifest>=0.42,<1",
-    "flake8==3.8.1",
-    "isort==4.3.21",
-    "mypy==0.910",
+    "flake8==7.1.2",
+    "isort==6.0.1",
+    "mypy==1.15",
 ]
 
 # Get version from __version__.py file
@@ -36,11 +36,11 @@ setup(
         "Topic :: Software Development :: Libraries",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3 :: Only",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Programming Language :: Python :: Implementation :: PyPy",
     ],
     keywords="api graphql actioncable protocol gql client",
