@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gqlactioncable"
+dynamic = ["version"]
+description = "GraphQL transport for gql for the ActionCable websockets protocol"
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "Leszek Hanusz", email = "leszek.hanusz@gmail.com"}
+]
+keywords = ["api", "graphql", "actioncable", "protocol", "gql", "client"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "gql[websockets]>=4.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "gql[websockets]>=4.0.0",
+    "black==25.1.0",
+    "check-manifest>=0.42,<1",
+    "flake8==7.1.2",
+    "isort==6.0.1",
+    "mypy==1.15",
+]
+
+[project.urls]
+Homepage = "https://github.com/leszekhanusz/gql-actioncable"
+Repository = "https://github.com/leszekhanusz/gql-actioncable"
+
+[tool.setuptools.packages.find]
+include = ["gqlactioncable*"]
+
+[tool.setuptools.package-data]
+gqlactioncable = ["py.typed"]
+
+[tool.setuptools.dynamic]
+version = {attr = "gqlactioncable.__version__.__version__"}
