@@ -1,8 +1,11 @@
 import asyncio
+import logging  # noqa: F401
 
 from gql import Client, gql
 
 from gqlactioncable import ActionCableWebsocketsTransport
+
+# logging.basicConfig(level=logging.DEBUG)
 
 
 async def main():
@@ -17,15 +20,18 @@ async def main():
         subscription = gql(
             """
             subscription onAnyCardUpdated {
-              aCardWasUpdated {
-                slug
+              anyCardWasUpdated {
+                card {
+                  name
+                  grade
+                }
               }
             }
         """
         )
 
         async for result in session.subscribe(subscription):
-            print(result)
+            print(result["anyCardWasUpdated"])
 
 
 asyncio.run(main())

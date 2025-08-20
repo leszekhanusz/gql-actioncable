@@ -25,6 +25,7 @@ async def main():
 
     transport = ActionCableWebsocketsTransport(
         url="wss://ws.sorare.com/cable",
+        keep_alive_timeout=60,
     )
 
     async with Client(transport=transport) as session:
@@ -32,15 +33,18 @@ async def main():
         subscription = gql(
             """
             subscription onAnyCardUpdated {
-              aCardWasUpdated {
-                slug
+              anyCardWasUpdated {
+                card {
+                  name
+                  grade
+                }
               }
             }
         """
         )
 
         async for result in session.subscribe(subscription):
-            print(result)
+            print(result["anyCardWasUpdated"])
 
 
 asyncio.run(main())
