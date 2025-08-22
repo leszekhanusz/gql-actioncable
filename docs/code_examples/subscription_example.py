@@ -29,8 +29,14 @@ async def main():
         """
         )
 
+        nb_results = 0
+
         async for result in session.subscribe(subscription):
             print(result["anyCardWasUpdated"])
+            nb_results += 1
+
+            if nb_results >= 5:
+                break
 
 
 asyncio.run(main())
