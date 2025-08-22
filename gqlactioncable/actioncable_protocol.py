@@ -25,6 +25,7 @@ class ActionCableProtocolTransportBase(SubscriptionTransportBase):
         *,
         adapter: AdapterConnection,
         connect_timeout: Optional[Union[int, float]] = 10,
+        close_timeout: Optional[Union[int, float]] = 10,
         keep_alive_timeout: Optional[Union[int, float]] = None,
     ) -> None:
         """Initialize the transport with the given parameters.
@@ -32,6 +33,8 @@ class ActionCableProtocolTransportBase(SubscriptionTransportBase):
         :param adapter: The connection dependency adapter
         :param connect_timeout: Timeout in seconds for the establishment
             of the websocket connection. If None is provided this will wait forever.
+        :param close_timeout: Timeout in seconds for the close. If None is provided
+            this will wait forever.
         :param keep_alive_timeout: Optional Timeout in seconds to receive
             a sign of liveness from the server.
         """
@@ -40,7 +43,7 @@ class ActionCableProtocolTransportBase(SubscriptionTransportBase):
         super().__init__(
             adapter=adapter,
             connect_timeout=connect_timeout,
-            close_timeout=0,
+            close_timeout=close_timeout,
             keep_alive_timeout=keep_alive_timeout,
         )
 
