@@ -22,6 +22,7 @@ class ActionCableWebsocketsTransport(ActionCableProtocolTransportBase):
         headers: Optional[HeadersLike] = None,
         ssl: Union[SSLContext, bool] = False,
         connect_timeout: Optional[Union[int, float]] = 10,
+        close_timeout: Optional[Union[int, float]] = 10,
         keep_alive_timeout: Optional[Union[int, float]] = None,
         connect_args: Optional[Dict[str, Any]] = None,
     ) -> None:
@@ -32,6 +33,8 @@ class ActionCableWebsocketsTransport(ActionCableProtocolTransportBase):
         :param ssl: ssl_context of the connection. Use ssl=False to disable encryption
         :param connect_timeout: Timeout in seconds for the establishment
             of the websocket connection. If None is provided this will wait forever.
+        :param close_timeout: Timeout in seconds for the close. If None is provided
+            this will wait forever.
         :param keep_alive_timeout: Optional Timeout in seconds to receive
             a sign of liveness from the server.
         :param connect_args: Other parameters forwarded to
@@ -52,6 +55,7 @@ class ActionCableWebsocketsTransport(ActionCableProtocolTransportBase):
         super().__init__(
             adapter=self.adapter,
             connect_timeout=connect_timeout,
+            close_timeout=close_timeout,
             keep_alive_timeout=keep_alive_timeout,
         )
 
